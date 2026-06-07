@@ -206,6 +206,8 @@
                 <li>Perhatikan jenis soal (Pilihan Ganda, Benar/Salah, atau Uraian).</li>
                 <li>Jawaban uraian diketik langsung di kolom yang tersedia.</li>
                 <li>Ujian otomatis tersimpan dan tertutup saat waktu habis.</li>
+                <li>PENTING: Selama ujian berlangsung, kamu TIDAK BOLEH keluar dari aplikasi atau menekan tombol Home.</li>
+                <li>Jika kamu keluar dari layar ujian, sistem akan menganggap kamu sudah selesai, dan jawabanmu saat itu juga akan otomatis dikirim.</li>
             </ul>
             <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
                 <input type="checkbox" id="cek-setuju" style="width: 20px; height: 20px; cursor:pointer;" onchange="toggleMulai()">
@@ -588,6 +590,19 @@
         function pindahLayar(lama, baru) {
             document.getElementById(lama).classList.remove('active'); document.getElementById(baru).classList.add('active');
         }
+        // Sensor Anti-Keluar Aplikasi
+document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+        // Sistem mendeteksi siswa keluar aplikasi (tekan Home/Switch)
+        
+        // 1. Munculkan peringatan keras (opsional)
+        alert("PELANGGARAN! Anda terdeteksi keluar dari layar ujian. Ujian Anda otomatis dihentikan dan dikirim ke server.");
+        
+        // 2. Panggil fungsi pengiriman jawaban Bapak di sini
+        // Ganti 'kirimUjian()' dengan nama fungsi yang Bapak gunakan untuk tombol selesai
+        prosesKirimData(); 
+    }
+});
     </script>
 </body>
 </html>

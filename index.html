@@ -3,7 +3,7 @@
 <head>
     <meta name="google" content="notranslate">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistem UJIAN CAT</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -25,7 +25,7 @@
         .btn-primary:disabled { background: #a0c4ff; cursor: not-allowed; }
         .btn-secondary { background: #6c757d; }
         
-        /* --- DESAIN HEADER BARU --- */
+        /* --- DESAIN HEADER --- */
         header { 
             background: #2c3e50; 
             color: white; 
@@ -119,6 +119,31 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* PERUBAHAN 2: DESAIN KHUSUS HP & LAYAR KECIL (RESPONSIF) */
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 10px; text-align: center; padding: 10px; }
+            .header-left { flex-direction: column; text-align: center; }
+            .header-left img { margin-bottom: 5px; }
+            .header-right { justify-content: center; width: 100%; }
+            
+            .exam-container { flex-direction: column; overflow-y: auto; }
+            .main-content { padding: 15px; overflow-y: visible; flex: none; }
+            
+            /* Sidebar (Nomor Soal) pindah ke bawah di layar sempit */
+            .sidebar { width: 100%; border-left: none; border-top: 2px solid #ddd; padding: 15px; flex: none; }
+            
+            /* Batasi tinggi grid nomor agar tidak terlalu memanjang ke bawah di HP */
+            .grid-nomor { max-height: 250px; overflow-y: auto; }
+            
+            /* Tombol lebih mudah di-tap di HP */
+            .btn-selesai { padding: 20px; font-size: 18px; margin-top: 15px;} 
+            .nav-bawah { flex-direction: column; gap: 10px; } 
+            .btn-nav { padding: 15px; font-size: 16px; }
+            
+            /* Sembunyikan teks detail di header agar tidak penuh */
+            .header-center { display: none; } 
+        }
     </style>
 </head>
 <body>
@@ -131,18 +156,14 @@
         </div>
     </div>
 
-    <!-- 1. LAYAR LOADING AWAL (SPLASH SCREEN FULL BERSKALA BESAR) -->
     <div id="layar-loading" class="screen active">
         <div style="text-align: center; background: white; padding: 60px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); max-width: 700px; width: 90%;">
             
-            <!-- LOGO EDUNEXA DIPERBESAR (max-height diubah dari 80px jadi 150px) -->
             <img src="logo_edunexa.png" style="max-height: 150px; margin-bottom: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);" alt="Logo Edunexa" onerror="this.style.display='none'">
             
-            <!-- TEKS DIPERBESAR -->
             <h2 style="color: #2c3e50; font-weight: bold; font-size: 34px; margin-bottom: 12px;">Menyambungkan ke Server...</h2>
             <p style="color: #7f8c8d; font-size: 18px; margin-bottom: 20px;">Mohon tunggu, sedang sinkronisasi konfigurasi ujian.</p>
             
-            <!-- SPINNER DIPERBESAR DENGAN EFEK SCALE -->
             <div class="spinner" style="transform: scale(1.4); margin: 40px auto 10px auto;"></div>
         </div>
     </div>

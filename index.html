@@ -400,6 +400,9 @@
         function toggleMulai() { document.getElementById('btn-mulai').disabled = !document.getElementById('cek-setuju').checked; }
 
         function mulaiUjian() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) elem.requestFullscreen();
+            document.getElementById('header-mapel').innerText = mapelAktif;
             document.getElementById('header-mapel').innerText = mapelAktif;
             document.getElementById('header-nama').innerText = siswaAktif;
             pindahLayar('layar-konfirmasi', 'layar-ujian');

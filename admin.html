@@ -8,54 +8,144 @@
         .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="file"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
+        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 10px;}
         #hasil-box { display: none; margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; text-align: center; }
+        
+        /* Tambahan CSS untuk menyembunyikan panel admin di awal */
+        #admin-tools { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🛠️ Admin Generator Edunexa Pro</h2>
-    <div style="background: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin-bottom: 20px;">
-        <h3>LANGKAH 1: Salin Database Master</h3>
-        <p>Klik tombol di bawah untuk membuat salinan Google Sheets Master ke akun Drive sekolah Anda:</p>
-        <a href="https://docs.google.com/spreadsheets/d/1iptZ51dbponTF1aSGpavT0sEO6GDp2eAJbcFdkDDjvI/copy" target="_blank" 
-           style="display:inline-block; background:#007bff; color:white; padding:10px; text-decoration:none; border-radius:5px; font-weight:bold;">
-           Salin Database Ujian
-        </a>
+    
+    <div id="login-section">
+        <h2 style="text-align: center;">🔐 Gerbang Aktivasi Edunexa Pro</h2>
+        <p style="text-align: center; color: #555; margin-bottom: 20px;">Masukkan data diri Anda. Lisensi hanya berlaku untuk 1 kali pembuatan sistem.</p>
+        
+        <div class="form-group">
+            <label>Nama Lengkap (Tanpa Gelar):</label>
+            <input type="text" id="input-nama" placeholder="Contoh: Budi Santoso">
+            
+            <label>NIP:</label>
+            <input type="text" id="input-nip" placeholder="Contoh: 198904122020121001">
+            
+            <button onclick="mintaKodeWA()" style="background:#25D366; font-weight: bold;">📲 1. Minta Kode via WhatsApp</button>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+
+            <label>Kode Aktivasi:</label>
+            <input type="password" id="input-kode" placeholder="Masukkan kode balasan dari Admin">
+            
+            <button onclick="prosesAktivasi()" style="background:#dc3545; font-weight: bold;">🔑 2. Buka Akses Generator</button>
+        </div>
     </div>
 
-    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px;">
-        <h3>LANGKAH 2: Deploy Apps Script</h3>
-        <p>Setelah disalin, buka Google Sheets tersebut, klik <strong>Ekstensi > Apps Script > Terapkan (Deploy)</strong>. Pastikan akses diatur ke <strong>"Siapa saja"</strong>, lalu salin link-nya ke kolom di bawah.</p>
-    </div>
-    <div class="form-group">
-        <label>1. Masukkan Link API Google Apps Script:</label>
-        <input type="text" id="input-api" placeholder="https://script.google.com/macros/s/.../exec">
+    <div id="admin-tools">
+        <h2>🛠️ Admin Generator Edunexa Pro</h2>
+        <div style="background: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin-bottom: 20px;">
+            <h3>LANGKAH 1: Salin Database Master</h3>
+            <p>Klik tombol di bawah untuk membuat salinan Google Sheets Master ke akun Drive sekolah Anda:</p>
+            <a href="https://docs.google.com/spreadsheets/d/1iptZ51dbponTF1aSGpavT0sEO6GDp2eAJbcFdkDDjvI/copy" target="_blank" 
+               style="display:inline-block; background:#007bff; color:white; padding:10px; text-decoration:none; border-radius:5px; font-weight:bold;">
+               Salin Database Ujian
+            </a>
+        </div>
+
+        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px;">
+            <h3>LANGKAH 2: Deploy Apps Script</h3>
+            <p>Setelah disalin, buka Google Sheets tersebut, klik <strong>Ekstensi > Apps Script > Terapkan (Deploy)</strong>. Pastikan akses diatur ke <strong>"Siapa saja"</strong>, lalu salin link-nya ke kolom di bawah.</p>
+        </div>
+        <div class="form-group">
+            <label>1. Masukkan Link API Google Apps Script:</label>
+            <input type="text" id="input-api" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+
+        <div class="form-group">
+            <label>2. Upload Logo Sekolah:</label>
+            <input type="file" id="input-file" accept="image/*">
+            <button onclick="uploadLogo()" id="btn-upload" style="background:#007bff;">Upload & Pasang Logo</button>
+            <p id="status-logo" style="font-size: 12px; color: #666;"></p>
+            <input type="hidden" id="input-logo-url">
+        </div>
+
+        <button onclick="buatLink()" style="background: #ffc107; color: black; font-weight: bold;">Buat Link Ujian & QR Code</button>
+
+        <div id="hasil-box">
+            <h3>Link Ujian Anda:</h3>
+            <p id="output-link" style="word-break: break-all; font-weight: bold; color: #007bff; padding: 10px; border: 1px solid #ccc;"></p>
+            <img id="qr-code" src="" alt="QR Code" style="width: 200px; margin-top: 10px;">
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>2. Upload Logo Sekolah:</label>
-        <input type="file" id="input-file" accept="image/*">
-        <button onclick="uploadLogo()" id="btn-upload" style="background:#007bff;">Upload & Pasang Logo</button>
-        <p id="status-logo" style="font-size: 12px; color: #666;"></p>
-        <input type="hidden" id="input-logo-url">
-    </div>
-
-    <button onclick="buatLink()">Buat Link Ujian & QR Code</button>
-
-    <div id="hasil-box">
-        <h3>Link Ujian Anda:</h3>
-        <p id="output-link" style="word-break: break-all; font-weight: bold; color: #007bff;"></p>
-        <img id="qr-code" src="" alt="QR Code" style="width: 200px;">
-    </div>
 </div>
 
 <script>
+    // ================= PENGATURAN UTAMA =================
     const IMGBB_API_KEY = "ef165a20434470fc067af175a18c7918";
     const LINK_GITHUB_INDEX = "https://edunexapro.github.io/ujianCBT/";
+    
+    // GANTI NOMOR WA INI DENGAN NOMOR ANDA (Gunakan 628...)
+    const NOMOR_WA_ADMIN = "6285891355553"; 
+    
+    // GANTI LINK INI DENGAN LINK DEPLOY APPS SCRIPT DATABASE ANDA
+    const URL_DATABASE_AKTIVASI = "https://script.google.com/macros/s/AKfycbxsZms1ksRkg2vgkd5DuTjpYcvuPg-gbF_Ibz3KfyYG4zdcaSXr1n-rpE1c_-PVU4V_sg/exec"; 
 
+    // ================= FUNGSI GERBANG AKTIVASI =================
+    function mintaKodeWA() {
+        const nama = document.getElementById('input-nama').value.trim();
+        const nip = document.getElementById('input-nip').value.trim();
+        
+        if (!nama || !nip) { alert("Harap isi Nama dan NIP terlebih dahulu!"); return; }
+        
+        const pesan = `Halo Admin Edunexa, saya ${nama} dengan NIP ${nip} memohon kode aktivasi untuk membuat sistem ujian.`;
+        const urlWA = `https://wa.me/${NOMOR_WA_ADMIN}?text=${encodeURIComponent(pesan)}`;
+        window.open(urlWA, '_blank');
+    }
+
+    async function prosesAktivasi() {
+        const nama = document.getElementById('input-nama').value.trim();
+        const nip = document.getElementById('input-nip').value.trim();
+        const kodeInput = document.getElementById('input-kode').value.trim().toUpperCase();
+
+        if (!nama || !nip || !kodeInput) { alert("Harap lengkapi semua data!"); return; }
+
+        // Validasi Lapis 1: Cek Hash Lokal
+        const gabungan = nama.toUpperCase().replace(/\s/g, '') + nip + "EDUNEXA2026";
+        const kodeValid = btoa(gabungan).substring(0, 8).toUpperCase();
+        
+        if (kodeInput !== kodeValid) {
+            alert("❌ Kode Aktivasi salah atau tidak sesuai dengan NIP Anda!");
+            return;
+        }
+
+        document.getElementById('login-section').innerHTML += '<p id="loading-text" style="text-align:center; color:blue; font-weight:bold;">Sedang mengecek database server...</p>';
+
+        // Validasi Lapis 2: Cek ke Google Sheets
+        try {
+            const response = await fetch(URL_DATABASE_AKTIVASI, {
+                method: "POST",
+                body: JSON.stringify({ nama: nama, nip: nip })
+            });
+            const result = await response.json();
+
+            if (result.status === "SUKSES") {
+                // Lolos semua gerbang, buka alat admin
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('admin-tools').style.display = 'block';
+            } else {
+                // NIP sudah terpakai
+                alert("❌ AKSES DITOLAK: " + result.pesan);
+                document.getElementById('loading-text').remove();
+            }
+        } catch (error) {
+            alert("Terjadi kesalahan jaringan saat menghubungi server database.");
+            document.getElementById('loading-text').remove();
+        }
+    }
+
+    // ================= FUNGSI BAWAAN ANDA =================
     async function uploadLogo() {
         const fileInput = document.getElementById('input-file');
         const status = document.getElementById('status-logo');

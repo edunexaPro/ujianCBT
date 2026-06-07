@@ -273,13 +273,17 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const LINK_API = urlParams.get('api');
+        
+        // --- MASUKKAN LINK GOOGLE APPS SCRIPT ANDA DI BAWAH INI ---
+        const LINK_WEB = "https://edunexapro.github.io/ujianCBT/";
+        
+        const LINK_API = urlParams.get('api') || LINK_WEB;
 
-        if (!LINK_API || LINK_API === "") {
+        if (!LINK_API || LINK_API === "" || LINK_API === "PASTE_LINK_APPS_SCRIPT_ANDA_DI_SINI") {
             document.body.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; font-family:sans-serif; background:#f4f6f9;">
-                    <h2 style="color:#dc3545; margin-bottom:10px;">⚠️ AKSES DITOLAK</h2>
-                    <p style="color:#555;">Aplikasi ujian tidak dapat dibuka langsung. Anda harus menjalankannya melalui <strong>Ujian_Siswa.exe</strong></p>
+                    <h2 style="color:#dc3545; margin-bottom:10px;">⚠️ KONEKSI GAGAL</h2>
+                    <p style="color:#555;">Link API Server belum diatur di dalam sistem.</p>
                 </div>
             `;
             throw new Error("API Link tidak ditemukan!");

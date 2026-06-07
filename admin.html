@@ -17,7 +17,19 @@
 
 <div class="container">
     <h2>🛠️ Admin Generator Edunexa Pro</h2>
-    
+    <div style="background: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin-bottom: 20px;">
+        <h3>LANGKAH 1: Salin Database Master</h3>
+        <p>Klik tombol di bawah untuk membuat salinan Google Sheets Master ke akun Drive sekolah Anda:</p>
+        <a href="https://docs.google.com/spreadsheets/d/1iptZ51dbponTF1aSGpavT0sEO6GDp2eAJbcFdkDDjvI/copy" target="_blank" 
+           style="display:inline-block; background:#007bff; color:white; padding:10px; text-decoration:none; border-radius:5px; font-weight:bold;">
+           Salin Database Ujian
+        </a>
+    </div>
+
+    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px;">
+        <h3>LANGKAH 2: Deploy Apps Script</h3>
+        <p>Setelah disalin, buka Google Sheets tersebut, klik <strong>Ekstensi > Apps Script > Terapkan (Deploy)</strong>. Pastikan akses diatur ke <strong>"Siapa saja"</strong>, lalu salin link-nya ke kolom di bawah.</p>
+    </div>
     <div class="form-group">
         <label>1. Masukkan Link API Google Apps Script:</label>
         <input type="text" id="input-api" placeholder="https://script.google.com/macros/s/.../exec">

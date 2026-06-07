@@ -1,122 +1,89 @@
 <!DOCTYPE html>
-<html lang="id" translate="no">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Setup - Edunexa Pro</title>
+    <title>Admin Edunexa Pro - Generator Link</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; display: flex; justify-content: center; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); max-width: 600px; width: 100%; }
-        
-        .header-title { text-align: center; margin-bottom: 25px; color: #2c3e50; border-bottom: 3px solid #007bff; padding-bottom: 15px; }
-        .header-title h1 { font-size: 24px; font-weight: bold; }
-        .header-title p { font-size: 14px; color: #7f8c8d; margin-top: 5px; }
-
-        .step-box { background: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
-        .step-box h3 { margin-bottom: 10px; color: #007bff; font-size: 16px; }
-        .step-box p { font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
-        
+        body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
-        .input-text { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 6px; font-size: 14px; transition: 0.3s; }
-        .input-text:focus { border-color: #007bff; outline: none; }
-        
-        .btn { padding: 12px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-align: center; display: inline-block; text-decoration: none; transition: 0.2s; width: 100%; }
-        .btn-primary { background: #007bff; color: white; }
-        .btn-primary:hover { background: #0056b3; }
-        .btn-success { background: #28a745; color: white; }
-        .btn-success:hover { background: #218838; }
-        
-        .result-box { display: none; margin-top: 25px; border-top: 2px dashed #ccc; padding-top: 20px; text-align: center; }
-        .link-output { background: #e9ecef; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 13px; word-break: break-all; margin-bottom: 15px; border: 1px solid #ced4da; }
-        #qr-code { margin: 15px auto; max-width: 200px; display: block; border: 5px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px;}
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
+        #hasil-box { display: none; margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-title">
-            <h1>EDUNEXA PRO - ADMIN SETUP</h1>
-            <p>Sistem Pembuatan Link Ujian & QR Code Otomatis</p>
-        </div>
-
-        <div class="step-box">
-            <h3>LANGKAH 1: Salin Database Master</h3>
-            <p>Klik tombol di bawah ini untuk membuat salinan Google Sheets Master ke akun Google Drive sekolah Anda.</p>
-            <a href="https://docs.google.com/spreadsheets/d/1v12szY8XnfwDQuv4T1kADGS_xqOFGQ_l4DrNhcqyaGs/copy" target="_blank" class="btn btn-primary">Salin Database Ujian</a>
-        </div>
-
-        <div class="step-box">
-            <h3>LANGKAH 2: Dapatkan Link Server (API)</h3>
-            <p>Pada Google Sheets yang baru Anda salin, klik menu <strong>Ekstensi > Apps Script</strong>. Lalu klik <strong>Terapkan (Deploy) > Deployment Baru</strong>. Pastikan akses diatur ke <strong>"Siapa Saja"</strong>. Salin link Web App yang diberikan.</p>
-        </div>
-
-        <div class="step-box">
-            <h3>LANGKAH 3: Rakit Link Ujian Siswa</h3>
-            <div class="form-group">
-                <label>Tempel (Paste) Link API Apps Script Anda di sini:</label>
-                <input type="text" id="input-api" class="input-text" placeholder="https://script.google.com/macros/s/AKfy.../exec">
-            </div>
-            <button class="btn btn-success" onclick="buatLink()">Buat Link & QR Code</button>
-        </div>
-
-        <div id="hasil-box" class="result-box">
-            <h3 style="color: #28a745; margin-bottom: 10px;">✅ Link Ujian Berhasil Dibuat!</h3>
-            <p style="font-size: 14px; margin-bottom: 10px;">Bagikan link di bawah ini atau minta siswa scan QR Code untuk mulai ujian.</p>
-            
-            <div class="link-output" id="output-link"></div>
-            <button class="btn btn-primary" onclick="copyLink()">Salin Link Siswa</button>
-            
-            <p style="font-size: 14px; margin-top: 20px; font-weight: bold;">QR CODE UJIAN:</p>
-            <img id="qr-code" src="" alt="QR Code Ujian">
-            <p style="font-size: 12px; color: #666; margin-top: 5px;">*Klik kanan / tahan gambar untuk menyimpan QR Code</p>
-        </div>
+<div class="container">
+    <h2>🛠️ Admin Generator Edunexa Pro</h2>
+    
+    <div class="form-group">
+        <label>1. Masukkan Link API Google Apps Script:</label>
+        <input type="text" id="input-api" placeholder="https://script.google.com/macros/s/.../exec">
     </div>
 
-    <script>
-        // =========================================================
-        // PENTING: Ganti URL di bawah dengan link GitHub Pages Anda!
-        // Pastikan link berakhiran index.html
-        // =========================================================
-        const LINK_GITHUB_ANDA = "https://edunexapro.github.io/ujianCBT/"; 
+    <div class="form-group">
+        <label>2. Upload Logo Sekolah:</label>
+        <input type="file" id="input-file" accept="image/*">
+        <button onclick="uploadLogo()" id="btn-upload" style="background:#007bff;">Upload & Pasang Logo</button>
+        <p id="status-logo" style="font-size: 12px; color: #666;"></p>
+        <input type="hidden" id="input-logo-url">
+    </div>
 
-        function buatLink() {
-            const apiLink = document.getElementById('input-api').value.trim();
-            
-            if (apiLink === "") {
-                alert("Harap masukkan Link API Apps Script terlebih dahulu!");
-                return;
-            }
-            if (!apiLink.includes("script.google.com")) {
-                alert("Format link salah! Link Apps Script biasanya diawali dengan https://script.google.com/...");
-                return;
-            }
+    <button onclick="buatLink()">Buat Link Ujian & QR Code</button>
 
-            // Merakit Link
-            const linkFinal = LINK_GITHUB_ANDA + "?api=" + encodeURIComponent(apiLink);
-            
-            // Menampilkan Hasil
-            document.getElementById('output-link').innerText = linkFinal;
-            
-            // Membuat QR Code Otomatis menggunakan API gratis
-            document.getElementById('qr-code').src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(linkFinal);
-            
-            // Memunculkan kotak hasil
-            document.getElementById('hasil-box').style.display = "block";
-            
-            // Scroll otomatis ke bawah
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
+    <div id="hasil-box">
+        <h3>Link Ujian Anda:</h3>
+        <p id="output-link" style="word-break: break-all; font-weight: bold; color: #007bff;"></p>
+        <img id="qr-code" src="" alt="QR Code" style="width: 200px;">
+    </div>
+</div>
 
-        function copyLink() {
-            const teks = document.getElementById('output-link').innerText;
-            navigator.clipboard.writeText(teks).then(() => {
-                alert("Link berhasil disalin! Silakan bagikan ke grup siswa.");
-            }).catch(err => {
-                alert("Gagal menyalin link. Silakan blok teks dan salin manual.");
+<script>
+    const IMGBB_API_KEY = "ef165a20434470fc067af175a18c7918";
+    const LINK_GITHUB_INDEX = "https://edunexapro.github.io/ujianCBT/";
+
+    async function uploadLogo() {
+        const fileInput = document.getElementById('input-file');
+        const status = document.getElementById('status-logo');
+        if (fileInput.files.length === 0) { alert("Pilih file gambar dulu!"); return; }
+
+        status.innerText = "Sedang mengupload...";
+        const formData = new FormData();
+        formData.append('image', fileInput.files[0]);
+
+        try {
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                method: 'POST',
+                body: formData
             });
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('input-logo-url').value = data.data.url;
+                status.innerText = "✅ Logo berhasil diupload!";
+            } else {
+                status.innerText = "❌ Gagal upload.";
+            }
+        } catch (e) {
+            status.innerText = "❌ Error koneksi.";
         }
-    </script>
+    }
+
+    function buatLink() {
+        const api = document.getElementById('input-api').value.trim();
+        const logo = document.getElementById('input-logo-url').value.trim();
+        
+        if (!api) { alert("Masukkan Link API!"); return; }
+
+        let finalLink = LINK_GITHUB_INDEX + "?api=" + encodeURIComponent(api);
+        if (logo) finalLink += "&logo=" + encodeURIComponent(logo);
+
+        document.getElementById('output-link').innerText = finalLink;
+        document.getElementById('qr-code').src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(finalLink);
+        document.getElementById('hasil-box').style.display = "block";
+    }
+</script>
+
 </body>
 </html>

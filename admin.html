@@ -1,191 +1,273 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" translate="no">
 <head>
+    <meta name="google" content="notranslate">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Admin Edunexa Pro - Generator Link</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; margin-bottom: 10px;}
-        #hasil-box { display: none; margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; text-align: center; }
+        /* --- DESAIN DASAR SERAGAM DENGAN INDEX.HTML --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
         
-        /* Tambahan CSS untuk menyembunyikan panel admin di awal */
-        #admin-tools { display: none; }
+        .screen { display: none; width: 100%; max-width: 600px; flex-direction: column; align-items: center; }
+        .screen.active { display: flex; }
+
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; }
+        .card h2 { color: #2c3e50; text-align: center; margin-bottom: 5px; }
+        .card h4 { color: #7f8c8d; text-align: center; margin-bottom: 20px; font-weight: normal; }
+        
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #333; }
+        .form-group input[type="text"], .form-group input[type="password"], .form-group input[type="file"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; transition: 0.2s; }
+        .form-group input:focus { border-color: #007bff; outline: none; }
+        
+        .btn { padding: 12px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; color: white; transition: 0.2s; font-size: 15px; display: inline-block; text-align: center; text-decoration: none; }
+        .btn-primary { background: #007bff; }
+        .btn-primary:hover { background: #0056b3; }
+        .btn-primary:disabled { background: #a0c4ff; cursor: not-allowed; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+        .btn-warning { background: #ffc107; color: #333; }
+        .btn-info { background: #17a2b8; }
+        
+        /* --- DESAIN STEP ADMIN --- */
+        .step-box { background: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin-bottom: 20px; border-radius: 4px; text-align: left; }
+        .step-box h3 { font-size: 16px; margin-bottom: 8px; color: #2c3e50; }
+        .step-box p { font-size: 14px; margin-bottom: 12px; line-height: 1.5; color: #555; }
+        
+        .hasil-box { display: none; margin-top: 20px; padding: 15px; background: #e2eef9; border: 1px dashed #007bff; border-radius: 5px; text-align: center; }
+        
+        /* --- CUSTOM MODAL --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; }
+        .modal-box h3 { margin-bottom: 15px; color: #2c3e50; }
+        .modal-box p { margin-bottom: 25px; font-size: 15px; line-height: 1.5; white-space: pre-line; color: #555; }
+        .modal-actions { display: flex; justify-content: center; gap: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <div id="login-section">
-        <h2 style="text-align: center;">🔐 Gerbang Aktivasi Edunexa Pro</h2>
-        <p style="text-align: center; color: #555; margin-bottom: 20px;">Masukkan data diri Anda. Lisensi hanya berlaku untuk 1 kali pembuatan sistem.</p>
-        
-        <div class="form-group">
-            <label>Nama Lengkap (Tanpa Gelar):</label>
-            <input type="text" id="input-nama" placeholder="Contoh: Budi Santoso">
-            
-            <label>NIP:</label>
-            <input type="text" id="input-nip" placeholder="Contoh: 198904122020121001">
-            
-            <button onclick="mintaKodeWA()" style="background:#25D366; font-weight: bold;">📲 1. Minta Kode via WhatsApp</button>
-            
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
-
-            <label>Kode Aktivasi:</label>
-            <input type="password" id="input-kode" placeholder="Masukkan kode balasan dari Admin">
-            
-            <button onclick="prosesAktivasi()" style="background:#dc3545; font-weight: bold;">🔑 2. Buka Akses Generator</button>
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="modal-title">Peringatan</h3>
+            <p id="modal-message">Pesan dialog di sini.</p>
+            <div class="modal-actions" id="modal-actions">
+                <button class="btn btn-primary" onclick="tutupModal()">Tutup</button>
+            </div>
         </div>
     </div>
 
-    <div id="admin-tools">
-        <h2>🛠️ Admin Generator Edunexa Pro</h2>
-        <div style="background: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin-bottom: 20px;">
-            <h3>LANGKAH 1: Salin Database Master</h3>
-            <p>Klik tombol di bawah untuk membuat salinan Google Sheets Master ke akun Drive sekolah Anda:</p>
-            <a href="https://docs.google.com/spreadsheets/d/1iptZ51dbponTF1aSGpavT0sEO6GDp2eAJbcFdkDDjvI/copy" target="_blank" 
-               style="display:inline-block; background:#007bff; color:white; padding:10px; text-decoration:none; border-radius:5px; font-weight:bold;">
-               Salin Database Ujian
-            </a>
-        </div>
-
-        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px;">
-            <h3>LANGKAH 2: Deploy Apps Script</h3>
-            <p>Setelah disalin, buka Google Sheets tersebut, klik <strong>Ekstensi > Apps Script > Terapkan (Deploy)</strong>. Pastikan akses diatur ke <strong>"Siapa saja"</strong>, lalu salin link-nya ke kolom di bawah.</p>
-        </div>
-        <div class="form-group">
-            <label>1. Masukkan Link API Google Apps Script:</label>
-            <input type="text" id="input-api" placeholder="https://script.google.com/macros/s/.../exec">
-        </div>
-
-        <div class="form-group">
-            <label>2. Upload Logo Sekolah:</label>
-            <input type="file" id="input-file" accept="image/*">
-            <button onclick="uploadLogo()" id="btn-upload" style="background:#007bff;">Upload & Pasang Logo</button>
-            <p id="status-logo" style="font-size: 12px; color: #666;"></p>
-            <input type="hidden" id="input-logo-url">
-        </div>
-
-        <button onclick="buatLink()" style="background: #ffc107; color: black; font-weight: bold;">Buat Link Ujian & QR Code</button>
-
-        <div id="hasil-box">
-            <h3>Link Ujian Anda:</h3>
-            <p id="output-link" style="word-break: break-all; font-weight: bold; color: #007bff; padding: 10px; border: 1px solid #ccc;"></p>
-            <img id="qr-code" src="" alt="QR Code" style="width: 200px; margin-top: 10px;">
+    <div id="layar-login" class="screen active">
+        <div class="card">
+            <h2>🔐 Gerbang Aktivasi</h2>
+            <h4>Edunexa Pro - Administrator</h4>
+            <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+            
+            <div class="form-group">
+                <label>Nama Lengkap (Tanpa Gelar)</label>
+                <input type="text" id="input-nama" placeholder="Contoh: Budi Santoso">
+            </div>
+            <div class="form-group">
+                <label>NIP</label>
+                <input type="text" id="input-nip" placeholder="Contoh: 198904122020121001">
+            </div>
+            
+            <button class="btn btn-success" style="margin-bottom: 20px;" onclick="mintaKodeWA()">📲 1. Minta Kode via WhatsApp</button>
+            
+            <div class="form-group">
+                <label>Kode Aktivasi</label>
+                <input type="password" id="input-kode" placeholder="Masukkan kode balasan dari Admin">
+            </div>
+            
+            <button class="btn btn-danger" id="btn-login" onclick="prosesAktivasi()">🔑 2. Buka Akses Generator</button>
         </div>
     </div>
 
-</div>
+    <div id="layar-admin" class="screen">
+        <div class="card">
+            <h2>🛠️ Admin Generator</h2>
+            <h4>Rakitan Sistem Ujian Mandiri</h4>
+            <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
 
-<script>
-    // ================= PENGATURAN UTAMA =================
-    const IMGBB_API_KEY = "ef165a20434470fc067af175a18c7918";
-    const LINK_GITHUB_INDEX = "https://edunexapro.github.io/ujianCBT/";
-    
-    // GANTI NOMOR WA INI DENGAN NOMOR ANDA (Gunakan 628...)
-    const NOMOR_WA_ADMIN = "6285891355553"; 
-    
-    // GANTI LINK INI DENGAN LINK DEPLOY APPS SCRIPT DATABASE ANDA
-    const URL_DATABASE_AKTIVASI = "https://script.google.com/macros/s/AKfycbyMYqJaj93URrMWVqLfQVvoD240lEdnfsf-r7i2cVlvfqvdPs6if_8Zjb972MaHnDh_BQ/exec"; 
+            <div class="step-box">
+                <h3>LANGKAH 1: Salin Database Master</h3>
+                <p>Klik tombol di bawah untuk membuat salinan Google Sheets ke akun Drive Anda.</p>
+                <a href="https://docs.google.com/spreadsheets/d/1iptZ51dbponTF1aSGpavT0sEO6GDp2eAJbcFdkDDjvI/copy" target="_blank" class="btn btn-primary">📝 Salin Database Ujian</a>
+            </div>
 
-    // ================= FUNGSI GERBANG AKTIVASI =================
-    function mintaKodeWA() {
-        const nama = document.getElementById('input-nama').value.trim();
-        const nip = document.getElementById('input-nip').value.trim();
+            <div class="step-box" style="border-left-color: #ffc107;">
+                <h3>LANGKAH 2: Deploy Apps Script</h3>
+                <p>Buka file salinan, klik <strong>Ekstensi > Apps Script > Terapkan (Deploy)</strong>. Atur akses ke <strong>"Siapa saja"</strong>, lalu salin URL-nya.</p>
+            </div>
+
+            <div class="step-box" style="border-left-color: #28a745;">
+                <h3>LANGKAH 3: Rakit Link Ujian</h3>
+                <div class="form-group">
+                    <label>Tempel Link API (Hasil Deploy):</label>
+                    <input type="text" id="input-api" placeholder="https://script.google.com/macros/s/.../exec">
+                </div>
+                <div class="form-group">
+                    <label>Upload Logo Sekolah (Opsional):</label>
+                    <input type="file" id="input-file" accept="image/*" style="margin-bottom: 5px;">
+                    <button class="btn btn-info" id="btn-upload" onclick="uploadLogo()">Unggah Logo</button>
+                    <p id="status-logo" style="font-size: 12px; color: #666; margin-top: 5px; font-weight: bold;"></p>
+                    <input type="hidden" id="input-logo-url">
+                </div>
+            </div>
+
+            <button class="btn btn-warning" onclick="buatLink()">🚀 BUAT LINK UJIAN SEKARANG</button>
+
+            <div id="hasil-box" class="hasil-box">
+                <h3 style="color: #2c3e50; margin-bottom: 10px;">✅ Link Ujian Berhasil Dibuat!</h3>
+                <input type="text" id="output-link" readonly style="width: 100%; padding: 10px; border: 1px solid #007bff; border-radius: 4px; background: white; margin-bottom: 15px; font-weight: bold; color: #007bff;">
+                <img id="qr-code" src="" alt="QR Code" style="width: 180px; border-radius: 10px; border: 2px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <p style="font-size: 12px; color: #555; margin-top: 10px;">(Tahan gambar QR Code untuk menyimpannya)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================= PENGATURAN UTAMA =================
+        const IMGBB_API_KEY = "ef165a20434470fc067af175a18c7918";
+        const LINK_GITHUB_INDEX = "https://edunexapro.github.io/ujianCBT/";
         
-        if (!nama || !nip) { alert("Harap isi Nama dan NIP terlebih dahulu!"); return; }
-        
-        const pesan = `Halo Admin Edunexa, saya ${nama} dengan NIP ${nip} memohon kode aktivasi untuk membuat sistem ujian.`;
-        const urlWA = `https://wa.me/${NOMOR_WA_ADMIN}?text=${encodeURIComponent(pesan)}`;
-        window.open(urlWA, '_blank');
-    }
+        // ⚠️ PASTIKAN MENGGANTI 2 DATA DI BAWAH INI:
+        const NOMOR_WA_ADMIN = "6281234567890"; 
+        const URL_DATABASE_AKTIVASI = "URL_APPS_SCRIPT_DATABASE_ANDA_DISINI"; 
 
-    async function prosesAktivasi() {
-        const nama = document.getElementById('input-nama').value.trim();
-        const nip = document.getElementById('input-nip').value.trim();
-        const kodeInput = document.getElementById('input-kode').value.trim().toUpperCase();
-
-        if (!nama || !nip || !kodeInput) { alert("Harap lengkapi semua data!"); return; }
-
-        // Validasi Lapis 1: Cek Hash Lokal
-        const gabungan = nama.toUpperCase().replace(/\s/g, '') + nip + "EDUNEXA2026";
-        const kodeValid = btoa(gabungan).substring(0, 8).toUpperCase();
-        
-        if (kodeInput !== kodeValid) {
-            alert("❌ Kode Aktivasi salah atau tidak sesuai dengan NIP Anda!");
-            return;
+        // ================= FUNGSI CUSTOM MODAL =================
+        function tampilkanAlert(judul, pesan) {
+            document.getElementById('modal-title').innerText = judul;
+            document.getElementById('modal-message').innerText = pesan;
+            document.getElementById('custom-modal').classList.add('active');
+        }
+        function tutupModal() {
+            document.getElementById('custom-modal').classList.remove('active');
         }
 
-        document.getElementById('login-section').innerHTML += '<p id="loading-text" style="text-align:center; color:blue; font-weight:bold;">Sedang mengecek database server...</p>';
-
-        // Validasi Lapis 2: Cek ke Google Sheets
-        try {
-            const response = await fetch(URL_DATABASE_AKTIVASI, {
-                method: "POST",
-                body: JSON.stringify({ nama: nama, nip: nip })
-            });
-            const result = await response.json();
-
-            if (result.status === "SUKSES") {
-                // Lolos semua gerbang, buka alat admin
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('admin-tools').style.display = 'block';
-            } else {
-                // NIP sudah terpakai
-                alert("❌ AKSES DITOLAK: " + result.pesan);
-                document.getElementById('loading-text').remove();
+        // ================= FUNGSI GERBANG AKTIVASI =================
+        function mintaKodeWA() {
+            const nama = document.getElementById('input-nama').value.trim();
+            const nip = document.getElementById('input-nip').value.trim();
+            
+            if (!nama || !nip) { 
+                tampilkanAlert("Data Kosong", "Harap isi Nama dan NIP terlebih dahulu!"); 
+                return; 
             }
-        } catch (error) {
-            alert("Terjadi kesalahan jaringan saat menghubungi server database.");
-            document.getElementById('loading-text').remove();
+            
+            const pesan = `Halo Admin Edunexa, saya ${nama} dengan NIP ${nip} memohon kode aktivasi untuk membuat sistem ujian.`;
+            const urlWA = `https://wa.me/${NOMOR_WA_ADMIN}?text=${encodeURIComponent(pesan)}`;
+            window.open(urlWA, '_blank');
         }
-    }
 
-    // ================= FUNGSI BAWAAN ANDA =================
-    async function uploadLogo() {
-        const fileInput = document.getElementById('input-file');
-        const status = document.getElementById('status-logo');
-        if (fileInput.files.length === 0) { alert("Pilih file gambar dulu!"); return; }
+        async function prosesAktivasi() {
+            const btn = document.getElementById('btn-login');
+            const nama = document.getElementById('input-nama').value.trim();
+            const nip = document.getElementById('input-nip').value.trim();
+            const kodeInput = document.getElementById('input-kode').value.trim().toUpperCase();
 
-        status.innerText = "Sedang mengupload...";
-        const formData = new FormData();
-        formData.append('image', fileInput.files[0]);
-
-        try {
-            const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            if (data.success) {
-                document.getElementById('input-logo-url').value = data.data.url;
-                status.innerText = "✅ Logo berhasil diupload!";
-            } else {
-                status.innerText = "❌ Gagal upload.";
+            if (!nama || !nip || !kodeInput) { 
+                tampilkanAlert("Data Tidak Lengkap", "Harap isi Nama, NIP, dan Kode Aktivasi!"); 
+                return; 
             }
-        } catch (e) {
-            status.innerText = "❌ Error koneksi.";
+
+            // Validasi Lapis 1: Cek Hash Lokal
+            const gabungan = nama.toUpperCase().replace(/\s/g, '') + nip + "EDUNEXA2026";
+            const kodeValid = btoa(gabungan).substring(0, 8).toUpperCase();
+            
+            if (kodeInput !== kodeValid) {
+                tampilkanAlert("Akses Ditolak", "Kode Aktivasi salah atau tidak sesuai dengan NIP Anda!");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "⏳ Sedang memverifikasi...";
+
+            // Validasi Lapis 2: Cek ke Google Sheets
+            try {
+                const response = await fetch(URL_DATABASE_AKTIVASI, {
+                    method: "POST",
+                    body: JSON.stringify({ nama: nama, nip: nip })
+                });
+                const result = await response.json();
+
+                if (result.status === "SUKSES") {
+                    // Lolos semua gerbang
+                    document.getElementById('layar-login').classList.remove('active');
+                    document.getElementById('layar-admin').classList.add('active');
+                } else {
+                    tampilkanAlert("Akses Ditolak", result.pesan);
+                }
+            } catch (error) {
+                tampilkanAlert("Error Jaringan", "Terjadi kesalahan saat menghubungi server database. Pastikan koneksi internet stabil dan Link API Database sudah benar.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "🔑 2. Buka Akses Generator";
+            }
         }
-    }
 
-    function buatLink() {
-        const api = document.getElementById('input-api').value.trim();
-        const logo = document.getElementById('input-logo-url').value.trim();
-        
-        if (!api) { alert("Masukkan Link API!"); return; }
+        // ================= FUNGSI BAWAAN APLIKASI =================
+        async function uploadLogo() {
+            const fileInput = document.getElementById('input-file');
+            const status = document.getElementById('status-logo');
+            const btnUpload = document.getElementById('btn-upload');
+            
+            if (fileInput.files.length === 0) { 
+                tampilkanAlert("File Kosong", "Silakan pilih file gambar logo terlebih dahulu!"); 
+                return; 
+            }
 
-        let finalLink = LINK_GITHUB_INDEX + "?api=" + encodeURIComponent(api);
-        if (logo) finalLink += "&logo=" + encodeURIComponent(logo);
+            status.innerText = "⏳ Sedang mengupload ke server...";
+            status.style.color = "#007bff";
+            btnUpload.disabled = true;
 
-        document.getElementById('output-link').innerText = finalLink;
-        document.getElementById('qr-code').src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(finalLink);
-        document.getElementById('hasil-box').style.display = "block";
-    }
-</script>
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
 
+            try {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('input-logo-url').value = data.data.url;
+                    status.innerText = "✅ Logo berhasil diupload dan dipasang!";
+                    status.style.color = "#28a745";
+                } else {
+                    status.innerText = "❌ Gagal upload gambar.";
+                    status.style.color = "#dc3545";
+                }
+            } catch (e) {
+                status.innerText = "❌ Terjadi error koneksi.";
+                status.style.color = "#dc3545";
+            } finally {
+                btnUpload.disabled = false;
+            }
+        }
+
+        function buatLink() {
+            const api = document.getElementById('input-api').value.trim();
+            const logo = document.getElementById('input-logo-url').value.trim();
+            
+            if (!api) { 
+                tampilkanAlert("Link API Kosong", "Harap tempelkan Link API (Hasil Deploy Langkah 2) ke dalam kolom yang tersedia!"); 
+                return; 
+            }
+
+            let finalLink = LINK_GITHUB_INDEX + "?api=" + encodeURIComponent(api);
+            if (logo) finalLink += "&logo=" + encodeURIComponent(logo);
+
+            document.getElementById('output-link').value = finalLink;
+            document.getElementById('qr-code').src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(finalLink);
+            document.getElementById('hasil-box').style.display = "block";
+            
+            tampilkanAlert("Berhasil!", "Link ujian dan QR Code berhasil dibuat. Silakan bagikan ke peserta didik.");
+        }
+    </script>
 </body>
 </html>

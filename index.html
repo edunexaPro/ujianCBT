@@ -164,7 +164,7 @@
             <h2 style="color: #2c3e50; font-weight: bold; font-size: 24px; margin-bottom: 12px;">Menyambungkan ke Server...</h2>
             <p style="color: #7f8c8d; font-size: 18px; margin-bottom: 20px;">Mohon tunggu, sedang sinkronisasi konfigurasi ujian.</p>
             
-            <div class="spinner" style="transform: scale(1.4); margin: 40px auto 10px auto;"></div>
+            <div class="spinner" style="margin: 40px auto 10px auto;"></div>
         </div>
     </div>
 
@@ -181,7 +181,7 @@
             <div class="form-group">
                 <label>Mata Pelajaran</label>
                 <select id="input-mapel">
-                   
+                    
                 </select>
             </div>
             <div class="form-group">
@@ -321,6 +321,12 @@
         let mapelAktif = "", waktuMenitAktif = 60, bankSoal = [], siswaAktif = "", soalAktif = 0;
         let jawabanSiswa = [], statusRagu = [], sisaDetik = 0, intervalWaktu, konfirmasiCallback = null; 
 
+        // Fungsi Mesin Penerjemah Gambar
+        function renderGambar(teks) {
+            if (!teks) return "";
+            return teks.replace(/\[gambar\](.*?)\[\/gambar\]/gi, '<br><img src="$1" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"><br>');
+        }
+
         function tampilkanAlert(judul, pesan) {
             document.getElementById('modal-title').innerText = judul;
             document.getElementById('modal-message').innerText = pesan;
@@ -403,7 +409,6 @@
             const elem = document.documentElement;
             if (elem.requestFullscreen) elem.requestFullscreen();
             document.getElementById('header-mapel').innerText = mapelAktif;
-            document.getElementById('header-mapel').innerText = mapelAktif;
             document.getElementById('header-nama').innerText = siswaAktif;
             pindahLayar('layar-konfirmasi', 'layar-ujian');
             buatGridNomor(); bukaSoal(0); mulaiTimer();
@@ -440,7 +445,9 @@
         function bukaSoal(index) {
             soalAktif = index; const data = bankSoal[index];
             document.getElementById('label-nomor').innerText = index + 1;
-            document.getElementById('teks-soal').innerText = data.soal;
+            
+            // Penggunaan renderGambar pada Teks Soal
+            document.getElementById('teks-soal').innerHTML = renderGambar(data.soal);
             
             let labelTipeStr = "";
             if(data.tipe === 'PG') labelTipeStr = "Pilihan Ganda (Pilih satu jawaban)";
@@ -457,7 +464,8 @@
                 hurufOpsi.forEach((huruf, i) => {
                     if(data.opsi[i] !== "") {
                         const checked = (jawabanSiswa[index] === huruf) ? 'checked' : '';
-                        opsiHtml += `<label class="opsi-label"><input type="radio" name="pilihan" value="${huruf}" ${checked} onchange="simpanJawaban('${huruf}', 'radio')"><strong>${huruf}.</strong> ${data.opsi[i]}</label>`;
+                        // Penggunaan renderGambar pada Opsi PG
+                        opsiHtml += `<label class="opsi-label"><input type="radio" name="pilihan" value="${huruf}" ${checked} onchange="simpanJawaban('${huruf}', 'radio')"><strong>${huruf}.</strong> ${renderGambar(data.opsi[i])}</label>`;
                     }
                 });
             } 
@@ -465,7 +473,8 @@
                 hurufOpsi.forEach((huruf, i) => {
                     if(data.opsi[i] !== "") {
                         const checked = (jawabanSiswa[index] === huruf) ? 'checked' : '';
-                        opsiHtml += `<label class="opsi-label"><input type="radio" name="pilihan" value="${huruf}" ${checked} onchange="simpanJawaban('${huruf}', 'radio')">${data.opsi[i]}</label>`;
+                        // Penggunaan renderGambar pada Opsi BS
+                        opsiHtml += `<label class="opsi-label"><input type="radio" name="pilihan" value="${huruf}" ${checked} onchange="simpanJawaban('${huruf}', 'radio')">${renderGambar(data.opsi[i])}</label>`;
                     }
                 });
             }
@@ -474,7 +483,8 @@
                 hurufOpsi.forEach((huruf, i) => {
                     if(data.opsi[i] !== "") {
                         const checked = jwbArray.includes(huruf) ? 'checked' : '';
-                        opsiHtml += `<label class="opsi-label"><input type="checkbox" value="${huruf}" ${checked} onchange="simpanJawaban('${huruf}', 'checkbox')">${data.opsi[i]}</label>`;
+                        // Penggunaan renderGambar pada Opsi PGK
+                        opsiHtml += `<label class="opsi-label"><input type="checkbox" value="${huruf}" ${checked} onchange="simpanJawaban('${huruf}', 'checkbox')">${renderGambar(data.opsi[i])}</label>`;
                     }
                 });
             } 
@@ -593,19 +603,14 @@
         function pindahLayar(lama, baru) {
             document.getElementById(lama).classList.remove('active'); document.getElementById(baru).classList.add('active');
         }
+        
         // Sensor Anti-Keluar Aplikasi
-document.addEventListener("visibilitychange", function() {
-    if (document.hidden) {
-        // Sistem mendeteksi siswa keluar aplikasi (tekan Home/Switch)
-        
-        // 1. Munculkan peringatan keras (opsional)
-        alert("PELANGGARAN! Anda terdeteksi keluar dari layar ujian. Ujian Anda otomatis dihentikan dan dikirim ke server.");
-        
-        // 2. Panggil fungsi pengiriman jawaban Bapak di sini
-        // Ganti 'kirimUjian()' dengan nama fungsi yang Bapak gunakan untuk tombol selesai
-        prosesKirimData(); 
-    }
-});
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                alert("PELANGGARAN! Anda terdeteksi keluar dari layar ujian. Ujian Anda otomatis dihentikan dan dikirim ke server.");
+                prosesKirimData(); 
+            }
+        });
     </script>
 </body>
 </html>
